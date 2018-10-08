@@ -6,7 +6,18 @@
  * Time: 4:31 PM
  */
 
-class M3UFile
-{
+class M3UFile {
+    var $name = "";
+    var $url = "";
+
+
+    private function parse_file_stream($stream){
+
+    }
+
+    public function is_ready(){
+        return false;
+    }
+
 
 }

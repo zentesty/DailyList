@@ -51,3 +51,10 @@ function file_get_contents_with_timeout($path, $timeout = 30) {
     //if($ret != null) print "Return is null" . "<br/>";
     return $ret;
 }
+
+function loop_on_country_to_find_last_good($country){
+    for ($x = 0; $x <= 10; $x++) {
+        $day_to_test = @date_create(@date('dmy'))->modify('-' . $x . ' days')->format('dmy');
+    }
+
+}
