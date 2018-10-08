@@ -17,20 +17,19 @@ class M3UFile {
     public function parse_file_stream($contents){
         $pos = 0;
         $old = 0;
+        $token = "#EXTINF:";
+
         do {
             $pos = strpos($contents, chr(13) . chr(10), $old);
             if($pos)
             {
                 $sub = substr($contents, $old, $pos - $old);
-                //echo $sub . "</br>";
                 $old = $pos + 1;
 
-                echo "------> " . $sub . "</br>";
-                if(strcmp(substr($sub, 0, 7), "#EXTINF")){
-                    echo $sub . "</br>";
-                   $this->entry_title = $sub;
+                $subPrefix = substr($sub, 1, strlen($token));
+                if($subPrefix == $token){
+                    $this->entry_title = $sub;
                 } else {
-                    echo "33 - " . $sub . "</br>";
                     if(!$this->entry_title == ""){
                         $m3uEntry = new M3UEntry($this->entry_title, $sub);
                         array_push($this->entries, $m3uEntry);
@@ -47,7 +46,6 @@ class M3UFile {
     }
 
     public function print_all_entries(){
-        echo "SIZE == " . sizeof($this->entries);
         foreach($this->entries as $entry){
             echo $entry;
         }

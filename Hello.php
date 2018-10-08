@@ -13,17 +13,25 @@ echo @date('dmy') . "</br>" ;
 //$m3ufile->is_ready();
 
 
-echo @date_create(@date('dmy'))->modify('-15 days')->format('dmy');
-echo "</br>" ;
+//echo @date_create(@date('dmy'))->modify('-15 days')->format('dmy');
+//echo "</br>" ;
+//
+//$x = 0;
+//echo @date_create(@date('dmy'))->modify('-' . $x .' days')->format('dmy');
+//echo "</br>" ;
+//
+//$a = [];
+//array_push($a, 10);
+//array_push($a, 20);
+//array_push($a, 30);
+//foreach($a as $entry){
+//    echo $entry . "</br>";
+//}
 
-$x = 0;
-echo @date_create(@date('dmy'))->modify('-' . $x .' days')->format('dmy');
-echo "</br>" ;
+$sub = "#EXTINF:-1,CA: BBC WORLD NEWS | HD";
+echo substr($sub, 0, 8) . "</br>";
+if(substr($sub, 0, 8) == "#EXTINF:"){
+    echo "____YES_____" . "</br>";
 
-$a = [];
-array_push($a, 10);
-array_push($a, 20);
-array_push($a, 30);
-foreach($a as $entry){
-    echo $entry . "</br>";
 }
+echo substr($sub, 1, 8) . "</br>";

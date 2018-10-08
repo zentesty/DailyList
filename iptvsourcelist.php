@@ -56,14 +56,14 @@ function loop_on_country_to_find_last_good($country){
                // echo $contents;
                 break;
             } else {
-                echo $UrlLink . " ..  " . $x . " - NOT FOUND" . "</br>";
+//                echo $UrlLink . " ..  " . $x . " - NOT FOUND" . "</br>";
             }
         } catch (Exception $e) {
             print "ABC" . "</br>";
-            echo 'Exception : ',  $e->getMessage(), "\n";
+//            echo 'Exception : ',  $e->getMessage(), "\n";
 
         }
-        echo "END LOOP" ."</br>";
+//        echo "END LOOP" ."</br>";
     }
     $m3uFIle->print_all_entries();
 

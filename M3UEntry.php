@@ -26,6 +26,7 @@ class M3UEntry
 
     public function __toString()
     {
-        return "ENTRY: " . $this->name . " - URL: " . $this->url;
+
+        return $this->name . chr(10) . chr(13) . $this->url  . chr(10) . chr(13);
     }
 }
