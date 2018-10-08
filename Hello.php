@@ -16,6 +16,14 @@ echo @date('dmy') . "</br>" ;
 echo @date_create(@date('dmy'))->modify('-15 days')->format('dmy');
 echo "</br>" ;
 
-$x = 12;
+$x = 0;
 echo @date_create(@date('dmy'))->modify('-' . $x .' days')->format('dmy');
+echo "</br>" ;
 
+$a = [];
+array_push($a, 10);
+array_push($a, 20);
+array_push($a, 30);
+foreach($a as $entry){
+    echo $entry . "</br>";
+}
