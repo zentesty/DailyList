@@ -15,7 +15,7 @@ $parameter = $_SERVER['QUERY_STRING'];
 if (array_key_exists('country', $_GET))
     $Country = $_GET['country'];
 else
-    $Country = "ca";
+    $Country = "us";
 
 if (array_key_exists('index', $_GET))
     $Index = $_GET['index'];
@@ -23,9 +23,17 @@ else
     $Index = "";
 
 
+
+
+loop_on_country_to_find_last_good("us");
 loop_on_country_to_find_last_good("ca");
-//loop_on_country_to_find_last_good("us");
-//loop_on_country_to_find_last_good("uk");
+loop_on_country_to_find_last_good("uk");
+
+
+//loop_on_country_to_find_last_good($m3uFIle, "ca");
+//loop_on_country_to_find_last_good($m3uFIle, "us");
+//loop_on_country_to_find_last_good($m3uFIle, "uk");
+
 
 
 function url_exists($url) {
@@ -41,8 +49,50 @@ function file_get_contents_with_timeout($path, $timeout = 30) {
     return $ret;
 }
 
+
+function internal_check_if_m3u($UrlLink){
+    try{
+        $content = file_get_contents_with_timeout($UrlLink);
+        if(substr($content, 0, 7) == "#EXTM3U" or
+            substr($content, 0, 7) == "#EXTINF")
+        {
+            return $content;
+        }
+    } catch (Exception $e) {
+        return false;
+    }
+    return false;
+}
+
+
 function loop_on_country_to_find_last_good($country){
-    $m3uFIle = new M3UFile();
+    $m3uFile = new M3UFile();
+    $found = false;
+
+    for ($x = 0; $x <= 10; $x++) {
+        $day_to_test = @date_create(@date('dmy'))->modify('-' . $x . ' days')->format('dmy');
+        $UrlLink = "http://www.iptvsource.com/dl/" . $country . "_" . $day_to_test . "_iptvsource_com.m3u";
+        for($y = 1; $y <= 10; $y++){
+            if($y > 1){
+                $UrlLink = "http://www.iptvsource.com/dl/" . $country . "_" . $day_to_test . "_iptvsource_com" . $y .".m3u";
+            }
+            $content = internal_check_if_m3u($UrlLink);
+            if($content){
+                $m3uFile->parse_file_stream($content);
+                $found = true;
+            } else {
+                break;
+            }
+        }
+        if($found) break;
+    }
+    $m3uFile->print_all_entries();
+
+}
+
+
+function loop_on_country_to_find_last_good_ORIGINAL($m3uFIle, $country){
+
     for ($x = 0; $x <= 10; $x++) {
         $Index = "";
         $day_to_test = @date_create(@date('dmy'))->modify('-' . $x . ' days')->format('dmy');
@@ -50,23 +100,16 @@ function loop_on_country_to_find_last_good($country){
         try{
             $contents = file_get_contents_with_timeout($UrlLink);
             if(substr($contents, 0, 7) == "#EXTM3U" or
-               substr($contents, 0, 7) == "#EXTINF")
+                substr($contents, 0, 7) == "#EXTINF")
             {
                 $m3uFIle->parse_file_stream($contents);
-               // echo $contents;
+                // echo $contents;
                 break;
-            } else {
-//                echo $UrlLink . " ..  " . $x . " - NOT FOUND" . "</br>";
             }
         } catch (Exception $e) {
-            print "ABC" . "</br>";
-//            echo 'Exception : ',  $e->getMessage(), "\n";
-
+//            print "ABC" . "</br>";
         }
-//        echo "END LOOP" ."</br>";
     }
-    $m3uFIle->print_all_entries();
-
-//    echo " *** OUT ***" ."</br>";
+//    $m3uFIle->print_all_entries();
 
 }

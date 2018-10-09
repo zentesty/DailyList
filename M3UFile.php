@@ -14,6 +14,7 @@ class M3UFile {
     var $entry_title = "";
 
 
+
     public function parse_file_stream($contents){
         $pos = 0;
         $old = 0;
@@ -47,7 +48,8 @@ class M3UFile {
 
     public function print_all_entries(){
         foreach($this->entries as $entry){
-            echo $entry;
+            //echo $entry;
+            $entry->output_to_m3u();
         }
     }
 
