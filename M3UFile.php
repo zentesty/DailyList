@@ -47,8 +47,11 @@ class M3UFile {
     }
 
     public function print_all_entries(){
+        usort($this->entries,function($first,$second){
+            //return $first->name > $second->name;
+            return strcmp(strtolower($first->name), strtolower($second->name));
+        });
         foreach($this->entries as $entry){
-            //echo $entry;
             $entry->output_to_m3u();
         }
     }

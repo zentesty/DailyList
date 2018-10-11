@@ -15,7 +15,7 @@ $parameter = $_SERVER['QUERY_STRING'];
 if (array_key_exists('country', $_GET))
     $Country = $_GET['country'];
 else
-    $Country = "us";
+    $Country = "NOT_SET";
 
 if (array_key_exists('index', $_GET))
     $Index = $_GET['index'];
@@ -23,16 +23,13 @@ else
     $Index = "";
 
 
-
-
-loop_on_country_to_find_last_good("us");
-loop_on_country_to_find_last_good("ca");
-loop_on_country_to_find_last_good("uk");
-
-
-//loop_on_country_to_find_last_good($m3uFIle, "ca");
-//loop_on_country_to_find_last_good($m3uFIle, "us");
-//loop_on_country_to_find_last_good($m3uFIle, "uk");
+if($Country == "NOT_SET"){
+    loop_on_country_to_find_last_good("us");
+    loop_on_country_to_find_last_good("ca");
+    loop_on_country_to_find_last_good("uk");
+} else {
+    loop_on_country_to_find_last_good($Country);
+}
 
 
 

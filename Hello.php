@@ -36,127 +36,40 @@ require_once "M3UFile.php";
 //}
 //echo substr($sub, 1, 8) . "</br>";
 
-function url_exists($url) {
-    if (!$fp = curl_init($url)) return false;
-    return true;
-}
-
-
-function URLIsValid($URL)
-{
-    $exists = true;
-    $file_headers = @get_headers($URL);
-    $InvalidHeaders = array('404', '403', '500');
-    foreach($InvalidHeaders as $HeaderVal)
-    {
-        if(strstr($file_headers[0], $HeaderVal))
-        {
-            $exists = false;
-            break;
-        }
-    }
-    return $exists;
-}
-
-$ret = url_exists("http://aa.zcccentelia.com");
+$ret = test_link("http://54.37.188.76:80/live/test1/test1/23642.ts");
 if($ret){
-    echo "YES </bt>";
+    echo $ret . " -- TRUE </br>";
 } else {
-    echo "NO </bt>";
-
+    echo $ret . " -- FALSE </br>";
 }
 
+$ret = test_link("http://1028107998.rsc.cdn77.org/ls-54548-2/index.m3u8");
+if($ret){
+    echo $ret . " -- TRUE </br>";
+} else {
+    echo $ret . " -- FALSE </br>";
+}
 
-function checkURL($url, array $options = array()) {
-    if (empty($url)) {
-        throw new Exception('URL is empty');
-    }
+$ret = test_link("http://54.37.188.76:80/live/new4tec/new4tec/23630.ts");
+if($ret){
+    echo $ret . " -- TRUE </br>";
+} else {
+    echo $ret . " -- FALSE </br>";
+}
 
-    // list of HTTP status codes
-    $httpStatusCodes = array(
-        100 => 'Continue',
-        101 => 'Switching Protocols',
-        102 => 'Processing',
-        200 => 'OK',
-        201 => 'Created',
-        202 => 'Accepted',
-        203 => 'Non-Authoritative Information',
-        204 => 'No Content',
-        205 => 'Reset Content',
-        206 => 'Partial Content',
-        207 => 'Multi-Status',
-        208 => 'Already Reported',
-        226 => 'IM Used',
-        300 => 'Multiple Choices',
-        301 => 'Moved Permanently',
-        302 => 'Found',
-        303 => 'See Other',
-        304 => 'Not Modified',
-        305 => 'Use Proxy',
-        306 => 'Switch Proxy',
-        307 => 'Temporary Redirect',
-        308 => 'Permanent Redirect',
-        400 => 'Bad Request',
-        401 => 'Unauthorized',
-        402 => 'Payment Required',
-        403 => 'Forbidden',
-        404 => 'Not Found',
-        405 => 'Method Not Allowed',
-        406 => 'Not Acceptable',
-        407 => 'Proxy Authentication Required',
-        408 => 'Request Timeout',
-        409 => 'Conflict',
-        410 => 'Gone',
-        411 => 'Length Required',
-        412 => 'Precondition Failed',
-        413 => 'Payload Too Large',
-        414 => 'Request-URI Too Long',
-        415 => 'Unsupported Media Type',
-        416 => 'Requested Range Not Satisfiable',
-        417 => 'Expectation Failed',
-        418 => 'I\'m a teapot',
-        422 => 'Unprocessable Entity',
-        423 => 'Locked',
-        424 => 'Failed Dependency',
-        425 => 'Unordered Collection',
-        426 => 'Upgrade Required',
-        428 => 'Precondition Required',
-        429 => 'Too Many Requests',
-        431 => 'Request Header Fields Too Large',
-        449 => 'Retry With',
-        450 => 'Blocked by Windows Parental Controls',
-        500 => 'Internal Server Error',
-        501 => 'Not Implemented',
-        502 => 'Bad Gateway',
-        503 => 'Service Unavailable',
-        504 => 'Gateway Timeout',
-        505 => 'HTTP Version Not Supported',
-        506 => 'Variant Also Negotiates',
-        507 => 'Insufficient Storage',
-        508 => 'Loop Detected',
-        509 => 'Bandwidth Limit Exceeded',
-        510 => 'Not Extended',
-        511 => 'Network Authentication Required',
-        599 => 'Network Connect Timeout Error'
-    );
+//http://1028107998.rsc.cdn77.org/ls-54548-2/index.m3u8  // FoxNews
+//http://54.37.188.76:80/live/new4tec/new4tec/23630.ts   // E!
 
-    $ch = curl_init($url);
-    curl_setopt($ch, CURLOPT_NOBODY, true);
-    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
 
-    if (isset($options['timeout'])) {
-        $timeout = (int) $options['timeout'];
-        curl_setopt($ch, CURLOPT_TIMEOUT, $timeout);
-    }
 
-    curl_exec($ch);
-    $returnedStatusCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-    curl_close($ch);
+function test_link($url){
+    ini_set('default_socket_timeout', 1);
 
-    if (array_key_exists($returnedStatusCode, $httpStatusCodes)) {
-        return "URL: '{$url}' - Error code: {$returnedStatusCode} - Definition: {$httpStatusCodes[$returnedStatusCode]}";
+    if(!$fp = @fopen($url, "r")) {
+        return false;
     } else {
-        return "'{$url}' does not exist";
+        fclose($fp);
+        return true;
     }
-}
 
+}
