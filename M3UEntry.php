@@ -15,8 +15,9 @@ class M3UEntry
 
     var $name = "";
     var $url = "";
-    var $token_prefix = ["CA: ", "CA:", "CA | ","US: ", "USA: ", "UK: "];
-    var $token_suffix = [" | SD", " | HD", " HD", " SD", " Backup"];
+    var $token_prefix = ["CA: ", "CA:", "CA | ", "US: ", "USA: ", "USA | ", "UK: ", "UK | ",
+                        "FR: ", "FR:", "KOR | ", "DE: ", "NL: ", "NL:"  ];
+    var $token_suffix = [" | SD", " | HD", " HD", " SD", " Backup", " (FR)", " FHD"];
 
 
 
@@ -83,7 +84,7 @@ class M3UEntry
 
     public function output_to_m3u(){
         if($this->url){
-            echo "#EXTINF:-1," . $this->name . chr(10) . chr(13) . $this->url . chr(10) . chr(13) . "</br>";
+            echo "#EXTINF:-1," . $this->name . chr(10) . chr(13) . $this->url . chr(10) . chr(13); // . "</br>";
         }
     }
 

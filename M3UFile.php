@@ -40,6 +40,7 @@ class M3UFile {
                 $pos = strpos($contents, chr(13) . chr(10), $old);
             }
         } while ($pos);
+        $this->entry_title = "";
     }
 
     public function is_ready(){

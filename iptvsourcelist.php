@@ -23,10 +23,14 @@ else
     $Index = "";
 
 
+echo "#EXTM3U". chr(10) . chr(13);
+//print_header($Country);
 if($Country == "NOT_SET"){
+//    loop_on_country_to_find_last_good("ko");
     loop_on_country_to_find_last_good("us");
     loop_on_country_to_find_last_good("ca");
     loop_on_country_to_find_last_good("uk");
+    loop_on_country_to_find_last_good("fr");
 } else {
     loop_on_country_to_find_last_good($Country);
 }
@@ -84,9 +88,31 @@ function loop_on_country_to_find_last_good($country){
         if($found) break;
     }
     $m3uFile->print_all_entries();
-
 }
 
+
+function print_header($Country){
+    echo "#EXTM3U". chr(10) . chr(13);
+
+    if ($Country == "NOT_SET" || $Country == strtolower("us")){
+        echo "#EXTINF:0,CNN" . chr(10) . chr(13);
+        echo "https://1861340594.rsc.cdn77.org/ls-54548-1/index.m3u8" . chr(10) . chr(13);
+        echo "#EXTINF:-1,Fox news". chr(10) . chr(13);
+        echo "http://1028107998.rsc.cdn77.org/ls-54548-2/index.m3u8" . chr(10) . chr(13);
+        echo "#EXTINF:0,HLN" . chr(10) . chr(13);
+        echo "https://5656faf4c13b0.streamlock.net:443/hln/myStream//playlist.m3u8" . chr(10) . chr(13);
+        echo "#EXTINF:-1,ABC News" . chr(10) . chr(13);
+        echo "http://abclive.abcnews.com/i/abc_live4@136330/master.m3u8" . chr(10) . chr(13);
+        echo "#EXTINF:-1,CBS News" . chr(10) . chr(13);
+        echo "http://cbsnewshd-lh.akamaihd.net/i/CBSNHD_7@199302/master.m3u8" . chr(10) . chr(13);
+        echo "#EXTINF:-1,MSNBC" . chr(10) . chr(13);
+        echo "http://tvemsnbc-lh.akamaihd.net/i/nbcmsnbc_1@122532/master.m3u8" . chr(10) . chr(13);
+        echo "#EXTINF:-1,MSNBC" . chr(10) . chr(13);
+        echo "http://tvemsnbc-lh.akamaihd.net/i/nbcmsnbc_1@122532/index_1296_av-p.m3u8" . chr(10) . chr(13);
+        echo "#EXTINF:-1,MSNBC" . chr(10) . chr(13);
+        echo "http://tvemsnbc-lh.akamaihd.net/i/nbcmsnbc_1@122532/index_1896_av-b.m3u8" . chr(10) . chr(13);
+    }
+}
 
 function loop_on_country_to_find_last_good_ORIGINAL($m3uFIle, $country){
 
