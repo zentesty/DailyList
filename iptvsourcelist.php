@@ -16,6 +16,7 @@ if (array_key_exists('country', $_GET))
     $Country = $_GET['country'];
 else
     $Country = "NOT_SET";
+//    $Country = "uk";
 
 if (array_key_exists('index', $_GET))
     $Index = $_GET['index'];
@@ -23,8 +24,8 @@ else
     $Index = "";
 
 
-echo "#EXTM3U". chr(10) . chr(13);
-//print_header($Country);
+//echo "#EXTM3U". chr(10) . chr(13);
+print_header($Country);
 if($Country == "NOT_SET"){
 //    loop_on_country_to_find_last_good("ko");
     loop_on_country_to_find_last_good("us");
@@ -69,10 +70,12 @@ function internal_check_if_m3u($UrlLink){
 function loop_on_country_to_find_last_good($country){
     $m3uFile = new M3UFile();
     $found = false;
+    $added_days = 0;
 
     for ($x = 0; $x <= 10; $x++) {
         $day_to_test = @date_create(@date('dmy'))->modify('-' . $x . ' days')->format('dmy');
         $UrlLink = "http://www.iptvsource.com/dl/" . $country . "_" . $day_to_test . "_iptvsource_com.m3u";
+        $lastnbr = 0;
         for($y = 1; $y <= 10; $y++){
             if($y > 1){
                 $UrlLink = "http://www.iptvsource.com/dl/" . $country . "_" . $day_to_test . "_iptvsource_com" . $y .".m3u";
@@ -82,10 +85,16 @@ function loop_on_country_to_find_last_good($country){
                 $m3uFile->parse_file_stream($content);
                 $found = true;
             } else {
+                $lastnbr = $y - 1;
+                $added_days += 1;
                 break;
             }
         }
-        if($found) break;
+        // In case the we found a day that had sources it stop searching with the
+        // exception for us and uk where we need days with more than 3 sources
+        if(!(($country == 'us' or $country == 'uk') and $lastnbr < 4)){
+            if($found) break;
+        }
     }
     $m3uFile->print_all_entries();
 }
@@ -114,25 +123,3 @@ function print_header($Country){
     }
 }
 
-function loop_on_country_to_find_last_good_ORIGINAL($m3uFIle, $country){
-
-    for ($x = 0; $x <= 10; $x++) {
-        $Index = "";
-        $day_to_test = @date_create(@date('dmy'))->modify('-' . $x . ' days')->format('dmy');
-        $UrlLink = "http://www.iptvsource.com/dl/" . $country . "_" . $day_to_test . "_iptvsource_com" . $Index .".m3u";
-        try{
-            $contents = file_get_contents_with_timeout($UrlLink);
-            if(substr($contents, 0, 7) == "#EXTM3U" or
-                substr($contents, 0, 7) == "#EXTINF")
-            {
-                $m3uFIle->parse_file_stream($contents);
-                // echo $contents;
-                break;
-            }
-        } catch (Exception $e) {
-//            print "ABC" . "</br>";
-        }
-    }
-//    $m3uFIle->print_all_entries();
-
-}

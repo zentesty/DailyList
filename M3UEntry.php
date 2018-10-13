@@ -15,8 +15,11 @@ class M3UEntry
 
     var $name = "";
     var $url = "";
-    var $token_prefix = ["CA: ", "CA:", "CA | ", "US: ", "USA: ", "USA | ", "UK: ", "UK | ",
-                        "FR: ", "FR:", "KOR | ", "DE: ", "NL: ", "NL:"  ];
+    var $token_prefix = ["CA:", "CA :", "CA|", "CA |",
+                        "US:", "USA:", "USA |", "(USA)", "USA:",
+                        "UK:", "UK | ",
+                        "FR:", "FR :", "FR|", "FR |",
+                        "KOR |", "DE:", "NL:" ];
     var $token_suffix = [" | SD", " | HD", " HD", " SD", " Backup", " (FR)", " FHD"];
 
 
@@ -33,24 +36,24 @@ class M3UEntry
 
 
     private function extract_name($rough){
-
         $this->name = substr($rough, strpos($rough, ",") + 1, strlen($rough));
+        //$this->name = strtolower($this->name);
         // Clean up the prefixes
         foreach($this->token_prefix as $prefix){
-            $pos = strpos($this->name, $prefix);
+            $pos = strpos(strtolower($this->name), strtolower($prefix));
             if(($pos !== false)){
                 $this->name = substr($this->name, $pos + strlen($prefix), strlen($this->name));
             }
         }
         // Clean up the suffixes
         foreach($this->token_suffix as $suffix){
-            $pos = strpos($this->name, $suffix);
+            $pos = strpos(strtolower($this->name), strtolower($suffix));
             if(($pos !== false)){
                 $this->name = substr($this->name, 0, $pos);
             }
         }
 
-        $this->name = trim($this->name);
+        $this->name = trim(ucwords($this->name));
 
 
 
