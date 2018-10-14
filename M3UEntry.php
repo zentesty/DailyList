@@ -15,13 +15,13 @@ class M3UEntry
 
     var $name = "";
     var $url = "";
-    var $token_prefix = ["CA:", "CA :", "CA|", "CA |",
-                        "US:", "USA:", "USA |", "(USA)", "USA:",
-                        "UK:", "UK | ",
-                        "FR:", "FR :", "FR|", "FR |",
-                        "KOR |", "DE:", "NL:" ];
-    var $token_suffix = [" | SD", " | HD", " HD", " SD", " Backup", " (FR)", " FHD"];
-
+    var $token_prefix = ["CA:", "CA :", "CA|", "CA |", "[CA]", "(CA)",
+        "US:", "USA:", "USA |", "(USA)", "USA:", "[USA]",
+        "UK:", "UK | ", "[UK]", "(UK)",
+        "FR:", "FR :", "FR|", "FR |", "[FR]",
+        "KOR |", "DE:", "NL:"];
+    var $token_suffix = [" | SD", " | HD", " HD", "_HD", " SD", " Backup",
+        " (FR)", " FHD" ,"| " ,"|", "1080p"];
 
 
     var $token = "#EXTINF:";
@@ -45,6 +45,12 @@ class M3UEntry
                 $this->name = substr($this->name, $pos + strlen($prefix), strlen($this->name));
             }
         }
+
+        $pos = strpos(strtolower($this->name), strtolower("_"));
+        if(($pos !== false) && $pos == 0){
+            $this->name = substr($this->name, $pos + strlen("_"), strlen($this->name));
+        }
+
         // Clean up the suffixes
         foreach($this->token_suffix as $suffix){
             $pos = strpos(strtolower($this->name), strtolower($suffix));

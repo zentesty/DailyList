@@ -15,25 +15,25 @@ $parameter = $_SERVER['QUERY_STRING'];
 if (array_key_exists('country', $_GET))
     $Country = $_GET['country'];
 else
-    $Country = "NOT_SET";
+    $Country = "basic";
 //    $Country = "uk";
 
-if (array_key_exists('index', $_GET))
-    $Index = $_GET['index'];
+if (array_key_exists('min', $_GET))
+    $min = $_GET['min'];
 else
-    $Index = "";
+    $min = "0";
 
 
 //echo "#EXTM3U". chr(10) . chr(13);
 print_header($Country);
-if($Country == "NOT_SET"){
-//    loop_on_country_to_find_last_good("ko");
-    loop_on_country_to_find_last_good("us");
-    loop_on_country_to_find_last_good("ca");
-    loop_on_country_to_find_last_good("uk");
-    loop_on_country_to_find_last_good("fr");
+if($Country == "all"){
+    loop_on_country_to_find_last_good("us", $min);
+    loop_on_country_to_find_last_good("ca", 0);
+    loop_on_country_to_find_last_good("uk", $min);
+    loop_on_country_to_find_last_good("fr", 0);
+    loop_on_country_to_find_last_good("sp", 0);
 } else {
-    loop_on_country_to_find_last_good($Country);
+    if($Country != "basic") loop_on_country_to_find_last_good($Country, $min);
 }
 
 
@@ -67,7 +67,7 @@ function internal_check_if_m3u($UrlLink){
 }
 
 
-function loop_on_country_to_find_last_good($country){
+function loop_on_country_to_find_last_good($country, $min){
     $m3uFile = new M3UFile();
     $found = false;
     $added_days = 0;
@@ -92,7 +92,10 @@ function loop_on_country_to_find_last_good($country){
         }
         // In case the we found a day that had sources it stop searching with the
         // exception for us and uk where we need days with more than 3 sources
-        if(!(($country == 'us' or $country == 'uk') and $lastnbr < 4)){
+//        if(!(($country == 'us' or $country == 'uk') and $lastnbr < ($min + 1))){
+//            if($found) break;
+//        }
+        if($lastnbr > $min){
             if($found) break;
         }
     }
@@ -101,9 +104,13 @@ function loop_on_country_to_find_last_good($country){
 
 
 function print_header($Country){
+
+    $nbc = "http://185.246.209.196:25461/live/fabo6nXpuq/Is3PISvHp7/8393.m3u8?token=Q0ZYUkFcFlgQUgxTXAYAWFJfAAQEAVUGV1JeBlVUUlJcVlFWBwRVUgdHGUQWQBdcVws7CAUWX11SX1UYQEREVUo7WVcQDhZXB1QEU0cYR01fCwFDWwRJRxEPAhZYEwAJDlMJER4WURpGAEcIBFg6XVMQDQIEFl8LFAoKGEBeWW9cAV1SXFAWWBBVF0pHXRZJFFxGIwRYCUUiBwhVBlAVHBoGWUdAVUAHEF8XVF0DVRsaRAcOFFoRFxhEXBYhcBUcGgFIR1daRwtdCxdcR1lWTA5ESEMIRzoXBBUSRgdQWlVKRgoRAhYYQF8ETTkGWwtXUwUQCA5aFkdbRFcWThNaX1YNRFxAa0QLVkcPRFQAXA0HU0Yc";
+
     echo "#EXTM3U". chr(10) . chr(13);
 
-    if ($Country == "NOT_SET" || $Country == strtolower("us")){
+    if ($Country == "NOT_SET" || $Country == strtolower("us") || $country="basic")
+    {
         echo "#EXTINF:0,CNN" . chr(10) . chr(13);
         echo "https://1861340594.rsc.cdn77.org/ls-54548-1/index.m3u8" . chr(10) . chr(13);
         echo "#EXTINF:-1,Fox news". chr(10) . chr(13);
@@ -120,6 +127,8 @@ function print_header($Country){
         echo "http://tvemsnbc-lh.akamaihd.net/i/nbcmsnbc_1@122532/index_1296_av-p.m3u8" . chr(10) . chr(13);
         echo "#EXTINF:-1,MSNBC" . chr(10) . chr(13);
         echo "http://tvemsnbc-lh.akamaihd.net/i/nbcmsnbc_1@122532/index_1896_av-b.m3u8" . chr(10) . chr(13);
+//        echo "#EXTINF:-1,NBC" . chr(10) . chr(13);
+//        echo $nbc . chr(10) . chr(13);
     }
 }
 
