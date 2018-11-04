@@ -37,6 +37,7 @@ class M3UEntry
 
     private function extract_name($rough){
         $this->name = substr($rough, strpos($rough, ",") + 1, strlen($rough));
+
         //$this->name = strtolower($this->name);
         // Clean up the prefixes
         foreach($this->token_prefix as $prefix){
@@ -45,12 +46,6 @@ class M3UEntry
                 $this->name = substr($this->name, $pos + strlen($prefix), strlen($this->name));
             }
         }
-
-        $pos = strpos(strtolower($this->name), strtolower("_"));
-        if(($pos !== false) && $pos == 0){
-            $this->name = substr($this->name, $pos + strlen("_"), strlen($this->name));
-        }
-
         // Clean up the suffixes
         foreach($this->token_suffix as $suffix){
             $pos = strpos(strtolower($this->name), strtolower($suffix));
@@ -58,14 +53,14 @@ class M3UEntry
                 $this->name = substr($this->name, 0, $pos);
             }
         }
-
-        $this->name = trim(ucwords($this->name));
-
-
-
-
-//        echo $this->name . "</br>";
+        // Final triming of space and underscore
+        $this->name = trim($this->name);
+        $this->name = rtrim($this->name);
+        $this->name = trim($this->name, '_');
+        $this->name = rtrim($this->name, '_');
+        $this->name = ucwords($this->name);
     }
+
 
     private function extract_url($rough){
         $rough = str_replace("\n","",$rough);
